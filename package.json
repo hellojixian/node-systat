@@ -1,0 +1,38 @@
+{
+  "name": "systat-bsd",
+  "description": "system status extension for node.js, it provides api to fetch cpu, memory, disk io, network interface realtime usage data",
+  "keywords": [
+    "system",
+    "utilities",
+    "performance",
+    "cpu",
+    "memory",
+    "io",
+    "net"
+  ],
+  "version": "0.1.0",
+  "author": "Jixian Wang <hellojixian@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hellojixian/node-systat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hellojixian/node-systat/issues"
+  },
+  "dependencies": {    
+  },
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "license": [
+    {
+      "type": "BSD",
+      "url": "https://raw.githubusercontent.com/hellojixian/node-systat/master/LICENSE"
+    }
+  ],
+  "engines": [
+    "node >= 0.8.0"
+  ],
+  "main": "./lib/systat.js",
+  "homepage": "https://github.com/hellojixian/node-systat.git"
+}
