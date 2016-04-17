@@ -19,9 +19,12 @@
   "bugs": {
     "url": "https://github.com/hellojixian/node-systat/issues"
   },
-  "dependencies": {    
+  "scripts": {   
+    "test":"mocha ./test/*.js"
   },
+  "dependencies": {},
   "devDependencies": {
+    "chai": "^3.5.0",
     "mocha": "*"
   },
   "license": [
