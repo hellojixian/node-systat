@@ -7,6 +7,7 @@
  * Operation Temperature (Topt)............0°C to +70°C
  */
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -14,8 +15,12 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <iostream>
+#include <vector>
+#include "sensor.h"
+
+#ifdef __FreeBSD__
 #include <machine/cpufunc.h>
-#include "it8728f.h"
 
 #define	BIT(__n) (((__n) == 32) ? 0 : ((uint32_t)1 << (__n)))
 
@@ -72,6 +77,7 @@
 				1350000 / ((val) * 2))
 
 #define VAL_FROM_REG(val) ((val) * 2 * 12  )
+
 
 static const uint8_t IT87_REG_FAN[]  = { 0x0d, 0x0e, 0x0f };
 static const uint8_t IT87_REG_TEMP[] = { 0x29, 0x2a, 0x2b };
@@ -136,83 +142,10 @@ static void it87_write_value(u_int addr, u_int reg, u_int value)
 	outb( addr + IT87_DATA_REG_OFFSET , value);
 }
 
-
-static std::vector<int> get_fan_speed()
-{
-	superio_enter();
-	superio_select(PME);
-	superio_inb(IT87_ACT_REG);
-	int address = superio_inw(IT87_BASE_REG);
-	int val;
-	std::vector<int> result; 
-
-	for(int i = 0; i < (int)sizeof(IT87_REG_FAN) ; i++)
-	{		
-		val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_FAN[i]) ;
-		result.push_back( FAN_FROM_REG(val) );
-	}
-
-	superio_exit();	
-	return result;
-}
-
-static std::vector<int> get_system_temp()
-{
-	superio_enter();
-	superio_select(PME);
-	superio_inb(IT87_ACT_REG);
-	int address = superio_inw(IT87_BASE_REG);
-	int val;
-	std::vector<int> result; 
-	
-	for(int i = 0; i < (int)sizeof(IT87_REG_TEMP) ; i++)
-	{
-		val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_TEMP[i]) ;		
-		result.push_back( val );
-	}
-
-	superio_exit();
-	return result;
-}
-
-static std::vector<int> get_voltages()
-{
-	superio_enter();
-	superio_select(PME);
-	superio_inb(IT87_ACT_REG);
-	int address = superio_inw(IT87_BASE_REG);
-	int val;
-	std::vector<int> result; 
-	
-	for(int i = 0; i < (int)sizeof(IT87_REG_VIN) ; i++)
-	{
-		val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_VIN[i]) ;		
-		result.push_back( VAL_FROM_REG(val) );
-	}
-
-	superio_exit();
-	return result;
-}
-
-
-
-
-int check_chip()
-{
-	superio_enter();
-	superio_select(PME);
-
-	int chip_type = superio_inw(DEVID);	
-	if(chip_type != IT8728F_DEVID) return 0; //may not support
-	superio_exit();
-
-	return 1;
-}
-
 void test()
 {
 	//test to get fan speeds
-	std::vector<int> fans = get_fan_speed();
+	std::vector<int> fans = sensor::get_fan_speeds();
 	//debug output
 	for (std::vector<int>::iterator it = fans.begin() ; it != fans.end(); ++it){
 		std::cout << "FAN Speed " 
@@ -223,7 +156,7 @@ void test()
 
 
     //test to get system temperatures
-	std::vector<int> temperatures = get_system_temp();	
+	std::vector<int> temperatures = sensor::get_system_tempertures();	
 	//debug output
 	for (std::vector<int>::iterator it = temperatures.begin() ; it != temperatures.end(); ++it){
 		std::cout << "System Temp "
@@ -234,7 +167,7 @@ void test()
 
 
 	//test to get system voltages
-	std::vector<int> volts = get_voltages();
+	std::vector<int> volts = sensor::get_voltages();
 	//debug output
 	for (std::vector<int>::iterator it = volts.begin() ; it != volts.end(); ++it){
 		std::cout << "System Voltage "
@@ -244,10 +177,99 @@ void test()
 
 }
 
-
 int main(int argc, char **argv)
 {
 	if(!check_chip()) return -1;	
 	// test();	
 	return 0;
+}
+
+#endif
+
+namespace shadowgrid { 
+
+	std::vector<int> sensor::get_fan_speeds()
+	{
+		std::vector<int> result; 	
+	#ifdef __FreeBSD__		
+		superio_enter();
+		superio_select(PME);
+		superio_inb(IT87_ACT_REG);
+		int address = superio_inw(IT87_BASE_REG);
+		int val;	
+
+		for(int i = 0; i < (int)sizeof(IT87_REG_FAN) ; i++)
+		{		
+			val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_FAN[i]) ;
+			result.push_back( FAN_FROM_REG(val) );
+		}
+
+		superio_exit();	
+	#endif		
+		return result;
+	}
+
+	std::vector<int> sensor::get_system_tempertures()
+	{
+		std::vector<int> result; 	
+	#ifdef __FreeBSD__	
+		superio_enter();
+		superio_select(PME);
+		superio_inb(IT87_ACT_REG);
+		int address = superio_inw(IT87_BASE_REG);
+		int val;	
+		
+		for(int i = 0; i < (int)sizeof(IT87_REG_TEMP) ; i++)
+		{
+			val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_TEMP[i]) ;		
+			result.push_back( val );
+		}
+
+		superio_exit();
+	#endif		
+		return result;
+	}
+
+	std::vector<int> sensor::get_voltages()
+	{
+		std::vector<int> result; 
+	#ifdef __FreeBSD__
+		superio_enter();
+		superio_select(PME);
+		superio_inb(IT87_ACT_REG);
+		int address = superio_inw(IT87_BASE_REG);
+		int val;
+		
+		
+		for(int i = 0; i < (int)sizeof(IT87_REG_VIN) ; i++)
+		{
+			val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_VIN[i]) ;		
+			result.push_back( VAL_FROM_REG(val) );
+		}
+
+		superio_exit();
+	#endif	
+		return result;
+	}
+
+
+
+
+	int sensor::check_chip()
+	{
+	#ifndef __FreeBSD__
+		return 0;
+	#endif
+	#ifdef __FreeBSD__		
+		superio_enter();
+		superio_select(PME);
+
+		int chip_type = superio_inw(DEVID);	
+		if(chip_type != IT8728F_DEVID) return 0; //may not support
+		superio_exit();
+
+		return 1;
+	#endif		
+	}
+
 }
