@@ -11,7 +11,9 @@ namespace shadowgrid {
 	using v8::String;
 	using v8::Value;
 
-	void cpu_count_phys_sync(const FunctionCallbackInfo<Value>& args);
+	void get_system_tempertures(const FunctionCallbackInfo<Value>& args);
+	void get_fan_speeds(const FunctionCallbackInfo<Value>& args);
+	void get_voltages(const FunctionCallbackInfo<Value>& args);
 	void init(Local<Object> exports);
 }
 

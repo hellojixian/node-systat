@@ -15,8 +15,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <machine/cpufunc.h>
-#include <iostream>
-#include <vector>
+#include "it8728f.h"
 
 #define	BIT(__n) (((__n) == 32) ? 0 : ((uint32_t)1 << (__n)))
 
@@ -147,7 +146,7 @@ static std::vector<int> get_fan_speed()
 	int val;
 	std::vector<int> result; 
 
-	for(int i = 0; i < sizeof(IT87_REG_FAN) ; i++)
+	for(int i = 0; i < (int)sizeof(IT87_REG_FAN) ; i++)
 	{		
 		val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_FAN[i]) ;
 		result.push_back( FAN_FROM_REG(val) );
@@ -166,7 +165,7 @@ static std::vector<int> get_system_temp()
 	int val;
 	std::vector<int> result; 
 	
-	for(int i = 0; i < sizeof(IT87_REG_TEMP) ; i++)
+	for(int i = 0; i < (int)sizeof(IT87_REG_TEMP) ; i++)
 	{
 		val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_TEMP[i]) ;		
 		result.push_back( val );
@@ -185,7 +184,7 @@ static std::vector<int> get_voltages()
 	int val;
 	std::vector<int> result; 
 	
-	for(int i = 0; i < sizeof(IT87_REG_VIN) ; i++)
+	for(int i = 0; i < (int)sizeof(IT87_REG_VIN) ; i++)
 	{
 		val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_VIN[i]) ;		
 		result.push_back( VAL_FROM_REG(val) );

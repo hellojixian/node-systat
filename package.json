@@ -19,6 +19,9 @@
   "bugs": {
     "url": "https://github.com/hellojixian/node-systat/issues"
   },
+  "config": {
+    "unsafe-perm":true
+  },
   "scripts": {   
     "test":"mocha ./test/*.js"
   },
@@ -27,12 +30,7 @@
     "chai": "^3.5.0",
     "mocha": "*"
   },
-  "license": [
-    {
-      "type": "BSD",
-      "url": "https://raw.githubusercontent.com/hellojixian/node-systat/master/LICENSE"
-    }
-  ],
+  "license": "BSD-3-Clause",
   "engines": [
     "node >= 0.8.0"
   ],

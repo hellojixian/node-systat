@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string>
 #include "systat.h"
+#include "it8728f/it8728f.h"
 
 namespace shadowgrid {
 
@@ -11,6 +12,21 @@ namespace shadowgrid {
 	using v8::String;
 	using v8::Value;	
 
+	void get_system_tempertures(const FunctionCallbackInfo<Value>& args){
+
+
+	}
+
+	void get_fan_speeds(const FunctionCallbackInfo<Value>& args){
+
+
+	}
+
+	void get_voltages(const FunctionCallbackInfo<Value>& args){
+
+
+	}
+
 	void Method(const FunctionCallbackInfo<Value>& args) {
 	  	Isolate* isolate = args.GetIsolate();
 
@@ -19,14 +35,15 @@ namespace shadowgrid {
 		_str = "[ "+_str+" ]";
 	  	Local<String> str = v8::String::NewFromUtf8(isolate, _str.c_str());
 
-	  	// Local<String> str = String::Concat(String::Concat("[",args[0]->ToString()),"]");
 	  	args.GetReturnValue().Set(str);
 	}
 
 	void init(Local<Object> exports) {
 	  	NODE_SET_METHOD(exports, "test", Method);
+	  	NODE_SET_METHOD(exports, "getFanSpeeds", get_fan_speeds);
+	  	NODE_SET_METHOD(exports, "getSystemTempertures", get_system_tempertures);
+	  	NODE_SET_METHOD(exports, "getVoltages", get_voltages);
 	}
 
 	NODE_MODULE(systat, init)
-
 }
