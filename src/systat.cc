@@ -1,8 +1,9 @@
+#include <node.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
 #include "sensor/sensor.h"
-#include "bsd/bsd.h"
+#include "system/system.h"
 
 namespace shadowgrid {
 
@@ -35,6 +36,21 @@ namespace shadowgrid {
 
 		args.GetReturnValue().Set(results);
 	}
+
+	void get_cpu_tempertures(const FunctionCallbackInfo<Value>& args){
+		Isolate* isolate = args.GetIsolate();
+		Local<Array> results = Array::New(isolate);
+		
+		// //get values
+		std::vector<int> ret = bsd::get_cpu_tempertures();
+		// //assign value to v8 
+		for (std::vector<int>::iterator it = ret.begin() ; it != ret.end(); ++it){
+			results->Set(std::distance(ret.begin(),it), 	//index
+						 v8::Number::New(isolate,*it));		//value
+		}
+
+		args.GetReturnValue().Set(results);
+	}	
 
 	void get_fan_speeds(const FunctionCallbackInfo<Value>& args){				
 		Isolate* isolate = args.GetIsolate();
@@ -81,6 +97,7 @@ namespace shadowgrid {
 	  	NODE_SET_METHOD(exports, "checkChip", check_chip);
 	  	NODE_SET_METHOD(exports, "getFanSpeeds", get_fan_speeds);
 	  	NODE_SET_METHOD(exports, "getSystemTempertures", get_system_tempertures);
+	  	NODE_SET_METHOD(exports, "getCPUTempertures", get_cpu_tempertures);
 	  	NODE_SET_METHOD(exports, "getVoltages", get_voltages);
 	}
 

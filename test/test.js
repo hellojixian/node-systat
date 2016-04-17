@@ -30,6 +30,14 @@ describe('systat', function () {
         });        
     });
 
+    describe('getCPUTempertures()', function () {
+        it('shoudl return the CPU tempertures(C) as array', function (done) {
+            var result = systat.getCPUTempertures();
+            expect(result).to.be.an.array;
+            done();
+        });        
+    });
+
     describe('getVoltages()', function () {
         it('shoudl return the system voltages(mV) as array', function (done) {
             var result = systat.getVoltages();

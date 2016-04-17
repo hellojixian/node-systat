@@ -5,7 +5,7 @@
       "sources": [ 
       	"./src/systat.cc",
       	"./src/sensor/it8728f.cc",
-      	"./src/bsd/bsd.cc"      	
+      	"./src/system/bsd.cc"      	
       ],      
       "cflags_cc": ["-std=c++11","-Wno-unused-function"],      
     }

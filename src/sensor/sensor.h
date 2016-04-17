@@ -1,8 +1,8 @@
 #ifndef IT8728F_H
 #define IT8728F_H
 
-#include <node.h>
-
+#include <stdio.h>
+#include <vector>
 
 namespace shadowgrid { 
 
