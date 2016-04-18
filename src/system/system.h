@@ -6,10 +6,10 @@
 
 namespace shadowgrid 
 {
-	class bsd
+	class System
 	{
 	public:
-		static std::vector<int> get_cpu_tempertures();
+		static std::vector<int> getCPUTempertures();
 	};
 }
 

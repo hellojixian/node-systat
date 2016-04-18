@@ -6,12 +6,12 @@
 
 namespace shadowgrid { 
 
-	class sensor{
+	class Sensor{
 	public:
-		static int check_chip();
-		static std::vector<int> get_system_tempertures();
-		static std::vector<int> get_fan_speeds();
-		static std::vector<int> get_voltages();
+		static int checkChip();
+		static std::vector<int> getSystemTempertures();
+		static std::vector<int> getFanSpeeds();
+		static std::vector<int> getVoltages();
 	};
 
 }

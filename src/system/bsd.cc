@@ -10,7 +10,7 @@
 
 namespace shadowgrid {
 
-	std::vector<int> bsd::get_cpu_tempertures()
+	std::vector<int> System::getCPUTempertures()
 	{
 		std::vector<int> result;
 		// printf("i m here in ct\n");		
