@@ -9,7 +9,7 @@ namespace shadowgrid
 	class System
 	{
 	public:
-		static std::vector<int> getCPUTempertures();
+		static std::vector<int> getCPUTemperatures();
 	};
 }
 

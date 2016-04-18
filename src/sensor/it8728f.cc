@@ -155,7 +155,7 @@ void test()
 
 
     //test to get system temperatures
-	std::vector<int> temperatures = shadowgrid::Sensor::getSystemTempertures();	
+	std::vector<int> temperatures = shadowgrid::Sensor::getSystemTemperatures();	
 	//debug output
 	for (std::vector<int>::iterator it = temperatures.begin() ; it != temperatures.end(); ++it){
 		std::cout << "System Temp "

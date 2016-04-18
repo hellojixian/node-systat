@@ -10,7 +10,7 @@
 
 namespace shadowgrid {
 
-	std::vector<int> System::getCPUTempertures()
+	std::vector<int> System::getCPUTemperatures()
 	{
 		std::vector<int> result;
 		// printf("i m here in ct\n");		
@@ -21,7 +21,7 @@ namespace shadowgrid {
 
 		// char *p;
 		unsigned long value;
-		const char *path = "dev.em.0.mac_stats.good_octets_recvd";
+		const char *path = "dev.cpu.0.temperature";
 
 		ret = sysctlnametomib(path, mib, &len);
 		printf("ret: %d",ret);
