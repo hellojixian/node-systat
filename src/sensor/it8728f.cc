@@ -72,7 +72,7 @@
 #define IT87_BASE_REG 0x60
 
 
-#define FAN_FROM_REG(val) ((val) == 0 ? -1 : (val) == 255 ? 0 : \
+#define FAN_FROM_REG(val) ((val) == 0 ? -1 : (val) == 0xff ? 0 : \
 				1350000 / ((val) * 2))
 
 #define VAL_FROM_REG(val) ((val) * 2 * 12  )
@@ -195,12 +195,12 @@ namespace shadowgrid {
 		superio_select(PME);
 		superio_inb(IT87_ACT_REG);
 		int address = superio_inw(IT87_BASE_REG);
-		int val;	
+		int val;
 
 		for(int i = 0; i < (int)sizeof(IT87_REG_FAN) ; i++)
 		{		
 			val = it87_read_value(address + IT87_EC_OFFSET, IT87_REG_FAN[i]) ;
-			result.push_back( FAN_FROM_REG(val) );
+			result.push_back( FAN_FROM_REG(val) );			
 		}
 
 		superio_exit();	

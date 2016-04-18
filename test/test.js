@@ -16,16 +16,16 @@ describe('systat', function () {
 
     describe('getFanSpeeds()', function () {
         it('shoudl return the system fans speed(rpm) as array', function (done) {
-            var result = systat.getFanSpeeds();
+            var result = systat.getFanSpeeds();            
             expect(result).to.be.an.array;
             done();
         });        
     });
 
-    describe('getSystemTemperatures)', function () {
+    describe('getSystemTemperatures()', function () {
         it('shoudl return the system tempertures(C) as array', function (done) {
             var result = systat.getSystemTemperatures();
-            expect(result).to.be.an.array;
+            expect(result).to.be.an.array;        
             done();
         });        
     });
@@ -33,7 +33,7 @@ describe('systat', function () {
     describe('getCPUTTemperatures()', function () {
         it('shoudl return the CPU tempertures(C) as array', function (done) {
             var result = systat.getCPUTemperatures();
-            expect(result).to.be.an.array;
+            expect(result).to.be.an.array;            
             done();
         });        
     });
@@ -46,6 +46,13 @@ describe('systat', function () {
         });        
     });
 
-
+    describe('getNICStat(nic)', function () {
+        it('shoudl return the mac stats info as object', function (done) {
+            var result = systat.getNICStat("em0");  
+            console.log(result);
+            expect(result).to.be.an.object;
+            done();
+        });        
+    });
 
 });

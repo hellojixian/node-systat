@@ -1,10 +1,12 @@
 #include "system.h"
 
-#ifdef __FreeBSD__
+#include <iostream>
 #include <sys/types.h>
 #include <sys/sysctl.h>
-#include <iostream>
 
+
+#ifdef __FreeBSD__
+#include <regex>
 
 #endif
 
@@ -13,40 +15,149 @@ namespace shadowgrid {
 	std::vector<int> System::getCPUTemperatures()
 	{
 		std::vector<int> result;
-		// printf("i m here in ct\n");		
-		int ret;
-		int mib[5];		
-		size_t len, len2;
-		len = 5;
-
-		// char *p;
-		unsigned long value;
-		const char *path = "dev.cpu.0.temperature";
-
-		ret = sysctlnametomib(path, mib, &len);
-		printf("ret: %d",ret);
-		printf("%s: %d %d %d %d len: %zu\n", path, mib[0], mib[1],mib[2],mib[3], len);
-		
-		ret = sysctl(mib, len, &value, &len2, NULL, 0);
-		printf("ret: %d",ret);
-		// p = static_cast<char *>(malloc(len2));
-		// sysctl(mib, len, p, &len2, NULL, 0);
-		printf("%s: %lu len: %zu\n", path, value, len2);
-
-		// for (i = 0; i < 10; i++) {
-		//    mib[2] = i;
-		//    sysctl(mib, 4, NULL, &len, NULL, 0);
-		//    p = static_cast<char *>(malloc(len));
-		//    sysctl(mib, 4, p, &len, NULL, 0);
-
-		//    if (sysctl(mib, 4, &p, &len, NULL, 0) == -1)
-		// 		perror("sysctl");
-		//    else	if (len	> 0){
-		// 	   printf("max proc: %s len: %zu\n", p, len);
-		//    }
-	 //    }
-	    
+#ifdef __FreeBSD__
+		int mib[2], ret, ncpu,temperature;
+		size_t len =4;				
+				
+		//get cpu number				
+		ret = sysctlbyname("hw.ncpu", &ncpu, &len, NULL, 0);
+		//get each cpu temperature		
+		for(int i=0; i<ncpu; i++){
+			
+			std::string path = "dev.cpu."+std::to_string(i)+".temperature";
+			len = 4;
+			ret = sysctlbyname(path.c_str(), &temperature, &len, NULL, 0);
+			temperature = (temperature - 2732) / 10;			
+			result.push_back(temperature);
+		}
+#endif
 		return result;
+	};
+
+	NICStatInfo System::getNICStat(const char *name)
+	{
+		NICStatInfo info;
+		FrameStatInfo framesSentDetail;
+		FrameStatInfo framesReceivedDetail;
+
+		info.framesReceivedDetail = framesReceivedDetail;
+		info.framesSentDetail = framesSentDetail;
+
+#ifdef __FreeBSD__	
+		//parse parameters
+		std::string nicName = static_cast<std::string>(name);
+		std::regex regexp ("([a-z].*)([0-9].*)");
+		std::smatch sm;
+		std::regex_match(nicName,sm,regexp);		
+		std::string nic = static_cast<std::string>(sm[1]).c_str();
+		std::string num = static_cast<std::string>(sm[2]).c_str();		
+
+		// fetch values		
+		std::string path;
+		int value, ret;
+		size_t len =4;
+		
+		//bytes
+		path = "dev."+nic+"."+num+".mac_stats.good_octets_txd";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.bytesSent = value;
+
+		path = "dev."+nic+"."+num+".mac_stats.good_octets_recvd";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.bytesReceived = value;
+
+		//packets
+		path = "dev."+nic+"."+num+".mac_stats.total_pkts_txd";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.packetsSent = value;
+
+		path = "dev."+nic+"."+num+".mac_stats.total_pkts_recvd";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.packetsReceived = value;
+
+		//boardcast packets
+		path = "dev."+nic+"."+num+".mac_stats.bcast_pkts_txd";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.boardcastPacketsReceived = value;
+
+		path = "dev."+nic+"."+num+".mac_stats.bcast_pkts_recvd";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.boardcastPacketsSent = value;
+
+		//multicast packets
+		path = "dev."+nic+"."+num+".mac_stats.mcast_pkts_txd";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.multicastPacketsReceived = value;
+
+		path = "dev."+nic+"."+num+".mac_stats.mcast_pkts_recvd";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.multicastPacketsSent = value;
+
+		//prepare frames info for sent
+		path = "dev."+nic+"."+num+".mac_stats.tx_frames_64";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesSentDetail.frames64 = value;
+		info.framesSent = value;
+
+		path = "dev."+nic+"."+num+".mac_stats.tx_frames_65_127";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesSentDetail.frames65_127 = value;
+		info.framesSent += value;
+
+		path = "dev."+nic+"."+num+".mac_stats.tx_frames_128_255";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesSentDetail.frames128_255 = value;
+		info.framesSent += value;
+
+		path = "dev."+nic+"."+num+".mac_stats.tx_frames_256_511";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesSentDetail.frames256_511 = value;
+		info.framesSent += value;
+
+		path = "dev."+nic+"."+num+".mac_stats.tx_frames_512_1023";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesSentDetail.frames512_1023 = value;
+		info.framesSent += value;
+
+		path = "dev."+nic+"."+num+".mac_stats.tx_frames_1024_1522";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesSentDetail.frames1024_1522 = value;
+		info.framesSent += value;
+
+		//prepare frames info for received
+		path = "dev."+nic+"."+num+".mac_stats.rx_frames_64";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesReceivedDetail.frames64 = value;
+		info.framesReceived = value;
+
+		path = "dev."+nic+"."+num+".mac_stats.rx_frames_65_127";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesReceivedDetail.frames65_127 = value;
+		info.framesReceived += value;
+
+		path = "dev."+nic+"."+num+".mac_stats.rx_frames_128_255";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesReceivedDetail.frames128_255 = value;
+		info.framesReceived += value;
+
+		path = "dev."+nic+"."+num+".mac_stats.rx_frames_256_511";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesReceivedDetail.frames256_511 = value;
+		info.framesReceived += value;
+
+		path = "dev."+nic+"."+num+".mac_stats.rx_frames_512_1023";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesReceivedDetail.frames512_1023 = value;
+		info.framesReceived += value;
+
+		path = "dev."+nic+"."+num+".mac_stats.rx_frames_1024_1522";
+		ret = sysctlbyname(path.c_str(), &value, &len, NULL, 0);
+		info.framesReceivedDetail.frames1024_1522 = value;		
+		info.framesReceived += value;
+#endif		
+
+
+		return info;
 	};
 
 } // shadowgrid
