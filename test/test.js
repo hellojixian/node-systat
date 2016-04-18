@@ -22,17 +22,17 @@ describe('systat', function () {
         });        
     });
 
-    describe('getSystemTempertures()', function () {
+    describe('getSystemTemperatures)', function () {
         it('shoudl return the system tempertures(C) as array', function (done) {
-            var result = systat.getSystemTempertures();
+            var result = systat.getSystemTemperatures();
             expect(result).to.be.an.array;
             done();
         });        
     });
 
-    describe('getCPUTempertures()', function () {
+    describe('getCPUTTemperatures()', function () {
         it('shoudl return the CPU tempertures(C) as array', function (done) {
-            var result = systat.getCPUTempertures();
+            var result = systat.getCPUTemperatures();
             expect(result).to.be.an.array;
             done();
         });        

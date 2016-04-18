@@ -144,7 +144,7 @@ static void it87_write_value(u_int addr, u_int reg, u_int value)
 void test()
 {
 	//test to get fan speeds
-	std::vector<int> fans = Sensor::getFanSpeeds();
+	std::vector<int> fans = shadowgrid::Sensor::getFanSpeeds();
 	//debug output
 	for (std::vector<int>::iterator it = fans.begin() ; it != fans.end(); ++it){
 		std::cout << "FAN Speed " 
@@ -155,7 +155,7 @@ void test()
 
 
     //test to get system temperatures
-	std::vector<int> temperatures = Sensor::getSystemTempertures();	
+	std::vector<int> temperatures = shadowgrid::Sensor::getSystemTempertures();	
 	//debug output
 	for (std::vector<int>::iterator it = temperatures.begin() ; it != temperatures.end(); ++it){
 		std::cout << "System Temp "
@@ -166,7 +166,7 @@ void test()
 
 
 	//test to get system voltages
-	std::vector<int> volts = Sensor::getVoltages();
+	std::vector<int> volts = shadowgrid::Sensor::getVoltages();
 	//debug output
 	for (std::vector<int>::iterator it = volts.begin() ; it != volts.end(); ++it){
 		std::cout << "System Voltage "
@@ -178,7 +178,7 @@ void test()
 
 int main(int argc, char **argv)
 {
-	if(!Sensor::checkChip()) return -1;	
+	if(!shadowgrid::Sensor::checkChip()) return -1;	
 	// test();	
 	return 0;
 }
@@ -208,7 +208,7 @@ namespace shadowgrid {
 		return result;
 	}
 
-	std::vector<int> Sensor::getSystemTempertures()
+	std::vector<int> Sensor::getSystemTemperatures()
 	{
 		std::vector<int> result; 	
 	#ifdef __FreeBSD__	

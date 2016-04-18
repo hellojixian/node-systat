@@ -22,12 +22,12 @@ namespace shadowgrid {
 	  	args.GetReturnValue().Set(Boolean::New(isolate,result));
 	}
 
-	void getSystemTempertures(const FunctionCallbackInfo<Value>& args){
+	void getSystemTemperatures(const FunctionCallbackInfo<Value>& args){
 		Isolate* isolate = args.GetIsolate();
 		Local<Array> results = Array::New(isolate);
 		
 		// //get values
-		std::vector<int> ret = Sensor::getSystemTempertures();
+		std::vector<int> ret = Sensor::getSystemTemperatures();
 		// //assign value to v8 
 		for (std::vector<int>::iterator it = ret.begin() ; it != ret.end(); ++it){
 			results->Set(std::distance(ret.begin(),it), 	//index
@@ -37,12 +37,12 @@ namespace shadowgrid {
 		args.GetReturnValue().Set(results);
 	}
 
-	void getCPUTempertures(const FunctionCallbackInfo<Value>& args){
+	void getCPUTemperatures(const FunctionCallbackInfo<Value>& args){
 		Isolate* isolate = args.GetIsolate();
 		Local<Array> results = Array::New(isolate);
 		
 		// //get values
-		std::vector<int> ret = System::getCPUTempertures();
+		std::vector<int> ret = System::getCPUTemperatures();
 		// //assign value to v8 
 		for (std::vector<int>::iterator it = ret.begin() ; it != ret.end(); ++it){
 			results->Set(std::distance(ret.begin(),it), 	//index
@@ -85,8 +85,8 @@ namespace shadowgrid {
 	void init(Local<Object> exports) {
 	  	NODE_SET_METHOD(exports, "checkChip", 			checkChip);
 	  	NODE_SET_METHOD(exports, "getFanSpeeds", 		getFanSpeeds);
-	  	NODE_SET_METHOD(exports, "getSystemTempertures",getSystemTempertures);
-	  	NODE_SET_METHOD(exports, "getCPUTempertures", 	getCPUTempertures);
+	  	NODE_SET_METHOD(exports, "getSystemTemperatures",getSystemTemperatures);
+	  	NODE_SET_METHOD(exports, "getCPUTemperatures", 	getCPUTemperatures);
 	  	NODE_SET_METHOD(exports, "getVoltages", 		getVoltages);
 	}
 
