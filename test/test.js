@@ -23,7 +23,7 @@ describe('systat', function () {
     });
 
     describe('getSystemTemperatures()', function () {
-        it('shoudl return the system tempertures(C) as array', function (done) {
+        it('shoudl return the system temperature(C) as array', function (done) {
             var result = systat.getSystemTemperatures();
             expect(result).to.be.an.array;        
             done();
@@ -31,7 +31,7 @@ describe('systat', function () {
     });
 
     describe('getCPUTTemperatures()', function () {
-        it('shoudl return the CPU tempertures(C) as array', function (done) {
+        it('shoudl return the CPU temperature(C) as array', function (done) {
             var result = systat.getCPUTemperatures();
             expect(result).to.be.an.array;            
             done();
@@ -48,11 +48,18 @@ describe('systat', function () {
 
     describe('getNICStat(nic)', function () {
         it('shoudl return the mac stats info as object', function (done) {
-            var result = systat.getNICStat("em0");  
-            console.log(result);
+            var result = systat.getNICStat("em0");              
             expect(result).to.be.an.object;
             done();
         });        
     });
+
+    describe('getDiskTemperatures(device)', function () {
+        it('shoudl return the disk temperature(c) as int', function (done) {
+            var result = systat.getNICStat("em0");              
+            expect(result).to.be.an.int;
+            done();
+        });        
+    });    
 
 });
