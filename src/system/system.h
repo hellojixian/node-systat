@@ -70,7 +70,6 @@ namespace shadowgrid
 	{
 	public:
 		static std::vector<int> getCPUTemperatures();		
-		static int getDiskTemperature(const char *name);		
 		static NICStatInfo getNICStat(const char *name);
 		
 		static std::vector<DiskIOStat> getDiskIOStat();

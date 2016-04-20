@@ -3,7 +3,7 @@
 
 var chai = require('chai');
 var expect = chai.expect;
-var systat = require('../lib/systat');
+var systat = require('../');
 
 describe('systat', function () {
     
@@ -56,8 +56,8 @@ describe('systat', function () {
         });        
     });
 
-    describe('getDiskInfo(device)', function () {
-        it('shoudl return the disk SMART info as object', function (done) {
+    describe('getDiskIOStat(device)', function () {
+        it('shoudl return the disk I/O statistics info as object', function (done) {
             var result = systat.getDiskIOStat();              
             expect(result).to.be.an.object;
             // console.log(result);
@@ -74,7 +74,7 @@ describe('systat', function () {
         });
     });
 
-    describe('getDiskUsage("/")', function () {
+    describe('getDiskUsage(root)', function () {
         it('should return the partition usage info as object', function (done) {
             var result = systat.getDiskUsage("/");
             expect(result).to.be.an.object;
@@ -83,12 +83,33 @@ describe('systat', function () {
         });
     });
 
-    // describe('getDiskTemperatures(device)', function () {
-    //     it('shoudl return the disk temperature(c) as int', function (done) {
-    //         var result = systat.getDiskInfo("ata0");              
-    //         expect(result).to.be.an.int;
-    //         done();
-    //     });        
-    // }); 
+    describe('getDiskTemperatures(device)', function () {
+        it('should return the disk temperature(c) as int', function (done) {
+            var disks = systat.getDiskIOStat();
+            var result = systat.getDiskTemperature(Object.keys(disks)[0]);              
+            expect(result).to.be.an.int;
+            // console.log(result);
+            done();
+        });
+    }); 
+
+    describe('getDiskTemperatures(device)', function () {
+        it('should return the disk temperature(c) as int', function (done) {
+            var disks = systat.getDiskIOStat();
+            var result = systat.getDiskTemperature(Object.keys(disks)[0]);              
+            expect(result).to.be.an.int;
+            // console.log(result);
+            done();
+        });
+    }); 
+
+    describe('getDisks()', function () {
+        it('should return the disk name as array', function (done) {            
+            var result = systat.getDisks();              
+            expect(result).to.be.an.array;
+            // console.log(result);
+            done();
+        });
+    });     
 
 });

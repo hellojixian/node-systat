@@ -220,11 +220,12 @@ namespace shadowgrid {
         fs = (struct statfs *)malloc(len);
         num = getfsstat(fs, len, MNT_NOWAIT);
         for(int i=0; i<num; i++){
+            if(strncmp(fs[i].f_mntfromname,"/dev/",5)!=0) continue;
             DiskPartitionInfo info;
             bzero(&info, sizeof(DiskPartitionInfo));
             strcpy(info.device,     fs[i].f_mntfromname);
             strcpy(info.mountPoint, fs[i].f_mntonname);
-            strcpy(info.fileSystem, fs[i].f_fstypename);
+            strcpy(info.fileSystem, fs[i].f_fstypename);            
             list.push_back(info);            
         }
         return list;
