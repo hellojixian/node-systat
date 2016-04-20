@@ -207,6 +207,29 @@ namespace shadowgrid {
 		args.GetReturnValue().Set(result);
 	}
 
+	void getDiskPartitions(const FunctionCallbackInfo<Value>& args){		
+		Isolate* isolate = args.GetIsolate();						
+		
+		Local<Array> result = Array::New(isolate);
+		//call system				
+		std::vector<DiskPartitionInfo> partitions = System::getDiskPartitions();
+
+		for (auto it=partitions.begin(); it != partitions.end(); ++it) {
+
+		    Local<Object> partition = Object::New(isolate);
+
+		    partition->Set(String::NewFromUtf8(isolate,"device"),
+		    		  	   String::NewFromUtf8(isolate,it->device));
+		   	partition->Set(String::NewFromUtf8(isolate,"mountPoint"),
+		    		  	   String::NewFromUtf8(isolate,it->mountPoint));
+			partition->Set(String::NewFromUtf8(isolate,"fileSystem"),
+		    		  	   String::NewFromUtf8(isolate,it->fileSystem));
+		   	
+		    result->Set(std::distance(partitions.begin(),it),partition);	
+		}
+		args.GetReturnValue().Set(result);
+	}
+
 
 	void init(Local<Object> exports) {
 	  	NODE_SET_METHOD(exports, "checkChip", 			checkChip);
@@ -216,6 +239,7 @@ namespace shadowgrid {
 	  	NODE_SET_METHOD(exports, "getVoltages", 		getVoltages);
 	  	NODE_SET_METHOD(exports, "getNICStat", 			getNICStat);
 	  	NODE_SET_METHOD(exports, "getDiskIOStat", 		getDiskIOStat);	  	
+	  	NODE_SET_METHOD(exports, "getDiskPartitions", 	getDiskPartitions);
 	}
 
 	NODE_MODULE(systat, init)

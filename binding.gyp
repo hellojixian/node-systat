@@ -19,7 +19,7 @@
           }
         }],
         ['OS=="freebsd"', {
-          'libraries': ["-ldevstat"]
+          'libraries': ["-ldevstat","-lc"]
         }]
       ]
     }

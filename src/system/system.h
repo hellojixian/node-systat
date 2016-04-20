@@ -38,6 +38,10 @@ namespace shadowgrid
 		unsigned int multicastPacketsSent;
 	};
 
+	struct NetworkIOStat {
+
+	};
+
 	struct DiskIOStat {
 		char name[128];
 		unsigned int readOperations;
@@ -49,13 +53,24 @@ namespace shadowgrid
 		long long busyTime;
 	};
 
+	struct DiskPartitionInfo {
+		char device[128];
+		char mountPoint[128];
+		char fileSystem[128];
+	};
+
 	class System
 	{
 	public:
 		static std::vector<int> getCPUTemperatures();		
-		static int getDiskTemperature(const char *name);
+		static int getDiskTemperature(const char *name);		
+		static NICStatInfo getNICStat(const char *name);
+		
 		static std::vector<DiskIOStat> getDiskIOStat();
-		static NICStatInfo getNICStat(const char *name);		
+		static std::vector<DiskPartitionInfo> getDiskPartitions();
+
+		static std::vector<NetworkIOStat> getNetworkIOStat();	
+
 	};
 }
 

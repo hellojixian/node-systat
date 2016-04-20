@@ -14,6 +14,9 @@
 #include <net/if_media.h>
 #include <devstat.h>  // get io counters
 #include <libutil.h>  // process open files, shared libs (kinfo_getvmmap)
+#include <sys/param.h>
+#include <sys/ucred.h>
+     
 #if __FreeBSD_version < 900000
     #include <utmp.h>  // system users
 #else
@@ -203,6 +206,24 @@ namespace shadowgrid {
 
         if (stats.dinfo->mem_ptr) free(stats.dinfo->mem_ptr);
         free(stats.dinfo);    
+        return list;
+    }
+
+    std::vector<DiskPartitionInfo> System::getDiskPartitions(){
+        std::vector<DiskPartitionInfo> list;
+        int num; long len;   
+        struct statfs *fs = NULL;
+        num = getfsstat(NULL, 0, MNT_NOWAIT);
+        len = sizeof(*fs) * num;
+        fs = (struct statfs *)malloc(len);
+        num = getfsstat(fs, len, MNT_NOWAIT);
+        for(int i=0; i<num; i++){
+            DiskPartitionInfo info;
+            strcpy(info.device,     fs[i].f_mntfromname);
+            strcpy(info.mountPoint, fs[i].f_mntonname);
+            strcpy(info.fileSystem, fs[i].f_fstypename);
+            list.push_back(info);            
+        }
         return list;
     }
 
