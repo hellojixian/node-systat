@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 #include <vector>
-#include <sys/types.h>
-#include <sys/sysctl.h>
 
 
 namespace shadowgrid 
@@ -40,12 +38,24 @@ namespace shadowgrid
 		unsigned int multicastPacketsSent;
 	};
 
+	struct DiskIOStat {
+		char name[128];
+		unsigned int readOperations;
+		unsigned int writeOperations;
+		unsigned int readBytes;
+		unsigned int writeBytes;
+		long long readTime;
+		long long writeTime;
+		long long busyTime;
+	};
 
 	class System
 	{
 	public:
-		static std::vector<int> getCPUTemperatures();
-		static NICStatInfo getNICStat(const char *name);
+		static std::vector<int> getCPUTemperatures();		
+		static int getDiskTemperature(const char *name);
+		static std::vector<DiskIOStat> getDiskIOStat();
+		static NICStatInfo getNICStat(const char *name);		
 	};
 }
 

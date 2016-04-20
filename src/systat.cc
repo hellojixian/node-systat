@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <iostream>
 #include "sensor/sensor.h"
 #include "system/system.h"
 
@@ -168,13 +169,44 @@ namespace shadowgrid {
 					 Number::New(isolate,info.multicastPacketsSent));		
 		
 		results->Set(String::NewFromUtf8(isolate,"multicastPacketsReceived"), 
-					 Number::New(isolate,info.multicastPacketsReceived));
-
-		
+					 Number::New(isolate,info.multicastPacketsReceived));		
 
 		//prepare output
 		args.GetReturnValue().Set(results);
 	}
+
+	void getDiskIOStat(const FunctionCallbackInfo<Value>& args){		
+		Isolate* isolate = args.GetIsolate();
+				
+		Local<Object> result = Object::New(isolate);
+		
+		//call system				
+		std::vector<DiskIOStat> disks = System::getDiskIOStat();
+
+		for (auto it=disks.begin(); it != disks.end(); ++it) {
+
+		    Local<Object> disk = Object::New(isolate);
+
+		    disk->Set(String::NewFromUtf8(isolate,"readOperations"),
+		    			Number::New(isolate,it->readOperations));
+		   	disk->Set(String::NewFromUtf8(isolate,"writeOperations"),
+		    			Number::New(isolate,it->writeOperations));
+			disk->Set(String::NewFromUtf8(isolate,"readBytes"),
+		    			Number::New(isolate,it->readBytes));
+		   	disk->Set(String::NewFromUtf8(isolate,"writeBytes"),
+		    			Number::New(isolate,it->writeBytes));
+		    disk->Set(String::NewFromUtf8(isolate,"readTime"),
+		    			Number::New(isolate,it->readTime));
+		    disk->Set(String::NewFromUtf8(isolate,"writeTime"),
+		    			Number::New(isolate,it->writeTime));
+		    disk->Set(String::NewFromUtf8(isolate,"busyTime"),
+		    			Number::New(isolate,it->busyTime));
+
+		    result->Set(String::NewFromUtf8(isolate,it->name),disk);	
+		}
+		args.GetReturnValue().Set(result);
+	}
+
 
 	void init(Local<Object> exports) {
 	  	NODE_SET_METHOD(exports, "checkChip", 			checkChip);
@@ -183,6 +215,7 @@ namespace shadowgrid {
 	  	NODE_SET_METHOD(exports, "getCPUTemperatures", 	getCPUTemperatures);
 	  	NODE_SET_METHOD(exports, "getVoltages", 		getVoltages);
 	  	NODE_SET_METHOD(exports, "getNICStat", 			getNICStat);
+	  	NODE_SET_METHOD(exports, "getDiskIOStat", 		getDiskIOStat);	  	
 	}
 
 	NODE_MODULE(systat, init)
