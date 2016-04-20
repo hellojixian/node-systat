@@ -16,6 +16,7 @@
 #include <libutil.h>  // process open files, shared libs (kinfo_getvmmap)
 #include <sys/param.h>
 #include <sys/ucred.h>
+#include <sys/statvfs.h>
      
 #if __FreeBSD_version < 900000
     #include <utmp.h>  // system users
@@ -26,6 +27,7 @@
 // convert a bintime struct to milliseconds
 #define BT2MSEC(bt) (bt.sec * 1000 + (((uint64_t) 1000000000 * \
                        (uint32_t) (bt.frac >> 32) ) >> 32 ) / 1000000)
+
 
 namespace shadowgrid {
 
@@ -207,7 +209,7 @@ namespace shadowgrid {
         if (stats.dinfo->mem_ptr) free(stats.dinfo->mem_ptr);
         free(stats.dinfo);    
         return list;
-    }
+    };
 
     std::vector<DiskPartitionInfo> System::getDiskPartitions(){
         std::vector<DiskPartitionInfo> list;
@@ -219,13 +221,29 @@ namespace shadowgrid {
         num = getfsstat(fs, len, MNT_NOWAIT);
         for(int i=0; i<num; i++){
             DiskPartitionInfo info;
+            bzero(&info, sizeof(DiskPartitionInfo));
             strcpy(info.device,     fs[i].f_mntfromname);
             strcpy(info.mountPoint, fs[i].f_mntonname);
             strcpy(info.fileSystem, fs[i].f_fstypename);
             list.push_back(info);            
         }
         return list;
-    }
+    };
+
+    DiskUsageInfo System::getDiskUsage(const char *name){
+        DiskUsageInfo result;
+        bzero(&result, sizeof(DiskUsageInfo));
+        int ret;
+        struct statvfs stat;
+        ret = statvfs(name,&stat);
+    
+        result.free  = stat.f_bavail * stat.f_frsize;
+        result.total = stat.f_blocks * stat.f_frsize;
+        result.used  = (stat.f_blocks - stat.f_bfree) * stat.f_frsize;
+        result.percent = (((double)result.used/(double)result.total)*10000)/100;
+
+        return result;
+    };
 
 } // shadowgrid
 #endif

@@ -59,6 +59,13 @@ namespace shadowgrid
 		char fileSystem[128];
 	};
 
+	struct DiskUsageInfo {
+		unsigned long total;
+		unsigned long used;
+		unsigned long free;
+		unsigned int percent;
+	};
+
 	class System
 	{
 	public:
@@ -68,6 +75,7 @@ namespace shadowgrid
 		
 		static std::vector<DiskIOStat> getDiskIOStat();
 		static std::vector<DiskPartitionInfo> getDiskPartitions();
+		static DiskUsageInfo getDiskUsage(const char *name);
 
 		static std::vector<NetworkIOStat> getNetworkIOStat();	
 

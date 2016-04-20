@@ -91,7 +91,7 @@ namespace shadowgrid {
 		Local<Object> framesSentDetail = Object::New(isolate);
 		Local<Object> framesReceivedDetail = Object::New(isolate);
 		
-		//get values
+		//get arugments
 		v8::String::Utf8Value nic(args[0]->ToString());
 		//call system
 		NICStatInfo info = System::getNICStat(*nic);
@@ -230,6 +230,32 @@ namespace shadowgrid {
 		args.GetReturnValue().Set(result);
 	}
 
+	void getDiskUsage(const FunctionCallbackInfo<Value>& args){		
+		Isolate* isolate = args.GetIsolate();
+				
+		Local<Object> result = Object::New(isolate);
+		
+		//get arugments
+		v8::String::Utf8Value mountPoint(args[0]->ToString());
+		//call system				
+		DiskUsageInfo disk = System::getDiskUsage(*mountPoint);
+
+		
+	    result->Set(String::NewFromUtf8(isolate,"total"),
+	    			Number::New(isolate,disk.total));
+
+	    result->Set(String::NewFromUtf8(isolate,"used"),
+	    			Number::New(isolate,disk.used));
+
+	    result->Set(String::NewFromUtf8(isolate,"free"),
+	    			Number::New(isolate,disk.free));
+
+	    result->Set(String::NewFromUtf8(isolate,"percent"),
+	    			Number::New(isolate,disk.percent));
+
+		
+		args.GetReturnValue().Set(result);
+	}
 
 	void init(Local<Object> exports) {
 	  	NODE_SET_METHOD(exports, "checkChip", 			checkChip);
@@ -240,6 +266,7 @@ namespace shadowgrid {
 	  	NODE_SET_METHOD(exports, "getNICStat", 			getNICStat);
 	  	NODE_SET_METHOD(exports, "getDiskIOStat", 		getDiskIOStat);	  	
 	  	NODE_SET_METHOD(exports, "getDiskPartitions", 	getDiskPartitions);
+	  	NODE_SET_METHOD(exports, "getDiskUsage", 		getDiskUsage);
 	}
 
 	NODE_MODULE(systat, init)

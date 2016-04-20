@@ -74,6 +74,15 @@ describe('systat', function () {
         });
     });
 
+    describe('getDiskUsage("/")', function () {
+        it('should return the partition usage info as object', function (done) {
+            var result = systat.getDiskUsage("/");
+            expect(result).to.be.an.object;
+            // console.log(result);
+            done();
+        });
+    });
+
     // describe('getDiskTemperatures(device)', function () {
     //     it('shoudl return the disk temperature(c) as int', function (done) {
     //         var result = systat.getDiskInfo("ata0");              

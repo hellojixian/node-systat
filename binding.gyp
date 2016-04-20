@@ -2,11 +2,9 @@
   "targets": [
     {
       "target_name": "systat",
-      "sources": [       	
-      	"./src/sensor/it8728f.cc",
-      	"./src/system/bsd.cc",
-        "./src/systat.cc"
-      ],      
+      "sources": [                    
+            "./src/systat.cc"
+          ],
       "cflags_cc": ["-std=c++11",
 				"-Wno-unused-function",
 				"-Wno-unused-variable"],
@@ -16,10 +14,20 @@
         ['OS=="mac"', {
           'xcode_settings': {
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
-          }
+          },
+          "sources": [        
+            "./src/sensor/it8728f.cc",
+            "./src/system/osx.cc",
+            
+          ],  
         }],
         ['OS=="freebsd"', {
-          'libraries': ["-ldevstat","-lc"]
+          'libraries': ["-ldevstat","-lc"],
+          "sources": [        
+            "./src/sensor/it8728f.cc",
+            "./src/system/freebsd.cc",
+            
+          ],  
         }]
       ]
     }
