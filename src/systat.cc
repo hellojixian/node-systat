@@ -257,6 +257,84 @@ namespace shadowgrid {
 		args.GetReturnValue().Set(result);
 	}
 
+	void getNetworkIOStat(const FunctionCallbackInfo<Value>& args){		
+		Isolate* isolate = args.GetIsolate();
+				
+		Local<Object> result = Object::New(isolate);
+		
+		//call system				
+		std::vector<NetworkIOStat> stats = System::getNetworkIOStat();
+		for(auto it = stats.begin(); it!= stats.end(); ++it){
+			Local<Object> interface = Object::New(isolate);
+
+			interface->Set(String::NewFromUtf8(isolate,"bytesReceived"),
+							Number::New(isolate, it->bytesReceived));
+
+			interface->Set(String::NewFromUtf8(isolate,"bytesSent"),
+							Number::New(isolate, it->bytesSent));
+
+			interface->Set(String::NewFromUtf8(isolate,"packetsReceived"),
+							Number::New(isolate, it->packetsReceived));
+
+			interface->Set(String::NewFromUtf8(isolate,"packetsSent"),
+							Number::New(isolate, it->packetsSent));
+
+			interface->Set(String::NewFromUtf8(isolate,"multicastPacketsReceived"),
+							Number::New(isolate, it->multicastPacketsReceived));
+
+			interface->Set(String::NewFromUtf8(isolate,"multicastPacketsSent"),
+							Number::New(isolate, it->multicastPacketsSent));
+
+			interface->Set(String::NewFromUtf8(isolate,"errorIn"),
+							Number::New(isolate, it->errorIn));
+			
+			interface->Set(String::NewFromUtf8(isolate,"errorOut"),
+							Number::New(isolate, it->errorOut));
+			
+			interface->Set(String::NewFromUtf8(isolate,"dropIn"),
+							Number::New(isolate, it->dropIn));
+			
+			interface->Set(String::NewFromUtf8(isolate,"dropOut"),
+							Number::New(isolate, it->dropOut));
+			
+			interface->Set(String::NewFromUtf8(isolate,"collisions"),
+							Number::New(isolate, it->collisions));
+
+			result->Set(String::NewFromUtf8(isolate, it->name), interface);
+		}
+		args.GetReturnValue().Set(result);
+	}
+
+
+	void getNetworkInterfaceStatus(const FunctionCallbackInfo<Value>& args){		
+		Isolate* isolate = args.GetIsolate();
+				
+		Local<Object> result = Object::New(isolate);
+		
+		//call system				
+		std::vector<NetworkInterfaceStatus> stats = System::getNetworkInterfaceStatus();
+		
+		for(auto it = stats.begin(); it!= stats.end(); ++it){
+			Local<Object> interface = Object::New(isolate);
+
+			interface->Set(String::NewFromUtf8(isolate,"isUp"),
+							Boolean::New(isolate, it->isUp));
+
+			interface->Set(String::NewFromUtf8(isolate,"speed"),
+							Number::New(isolate, it->speed));
+
+			interface->Set(String::NewFromUtf8(isolate,"mtu"),
+							Number::New(isolate, it->mtu));
+
+			interface->Set(String::NewFromUtf8(isolate,"duplex"),
+							Number::New(isolate, it->duplex));
+
+			result->Set(String::NewFromUtf8(isolate, it->name), interface);
+		}
+
+		args.GetReturnValue().Set(result);
+	}
+
 	void init(Local<Object> exports) {
 	  	NODE_SET_METHOD(exports, "checkChip", 			checkChip);
 	  	NODE_SET_METHOD(exports, "getFanSpeeds", 		getFanSpeeds);
@@ -267,6 +345,8 @@ namespace shadowgrid {
 	  	NODE_SET_METHOD(exports, "getDiskIOStat", 		getDiskIOStat);	  	
 	  	NODE_SET_METHOD(exports, "getDiskPartitions", 	getDiskPartitions);
 	  	NODE_SET_METHOD(exports, "getDiskUsage", 		getDiskUsage);
+	  	NODE_SET_METHOD(exports, "getNetworkIOStat", 	getNetworkIOStat);
+	  	NODE_SET_METHOD(exports, "getNetworkInterfaceStatus", 	getNetworkInterfaceStatus);
 	}
 
 	NODE_MODULE(systat, init)

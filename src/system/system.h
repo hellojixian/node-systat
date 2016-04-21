@@ -9,41 +9,36 @@ namespace shadowgrid
 {
 
 	struct FrameStatInfo {
-		unsigned int frames64;
-		unsigned int frames65_127;
-		unsigned int frames128_255;
-		unsigned int frames256_511;
-		unsigned int frames512_1023;
-		unsigned int frames1024_1522;
+		unsigned long frames64;
+		unsigned long frames65_127;
+		unsigned long frames128_255;
+		unsigned long frames256_511;
+		unsigned long frames512_1023;
+		unsigned long frames1024_1522;
 	};
 
-	struct NICErrorStatInfo{
-		unsigned int crcErrors;
-		unsigned int receviedErrors;
-		unsigned int receviedJabber;
-	};
 
 	struct NICStatInfo {
-		unsigned int bytesReceived;
-		unsigned int bytesSent;
-		unsigned int packetsReceived;
-		unsigned int packetsSent;
-		unsigned int framesReceived;
-		unsigned int framesSent;		
+		unsigned long bytesReceived;
+		unsigned long bytesSent;
+		unsigned long packetsReceived;
+		unsigned long packetsSent;
+		unsigned long framesReceived;
+		unsigned long framesSent;		
 		shadowgrid::FrameStatInfo framesReceivedDetail;
 		shadowgrid::FrameStatInfo framesSentDetail;
-		unsigned int boardcastPacketsReceived;
-		unsigned int boardcastPacketsSent;
-		unsigned int multicastPacketsReceived;
-		unsigned int multicastPacketsSent;
+		unsigned long boardcastPacketsReceived;
+		unsigned long boardcastPacketsSent;
+		unsigned long multicastPacketsReceived;
+		unsigned long multicastPacketsSent;
 	};
 
 	struct DiskIOStat {
 		char name[128];
-		unsigned int readOperations;
-		unsigned int writeOperations;
-		unsigned int readBytes;
-		unsigned int writeBytes;
+		unsigned long readOperations;
+		unsigned long writeOperations;
+		unsigned long readBytes;
+		unsigned long writeBytes;
 		long long readTime;
 		long long writeTime;
 		long long busyTime;
@@ -63,19 +58,25 @@ namespace shadowgrid
 	};
 
 	struct NetworkIOStat {
-		unsigned int bytesReceived;
-		unsigned int bytesSent;
-		unsigned int packetsReceived;
-		unsigned int packetsSent;
-		unsigned int errorIn;
-		unsigned int errorOut;
-		unsigned int dropIn;
-		unsigned int dropOut;
+		char name[32];
+		unsigned long bytesReceived;
+		unsigned long bytesSent;
+		unsigned long packetsReceived;
+		unsigned long packetsSent;
+		unsigned long multicastPacketsReceived;
+		unsigned long multicastPacketsSent;
+		unsigned long errorIn;
+		unsigned long errorOut;
+		unsigned long dropIn;
+		unsigned long dropOut;
+		unsigned long collisions;
 	};
 
 	struct NetworkInterfaceStatus{
+		char name[32];
 		bool isUp;
 		unsigned int speed;
+		unsigned int duplex;
 		unsigned int mtu;
 	};
 
@@ -91,6 +92,8 @@ namespace shadowgrid
 
 		static std::vector<NetworkIOStat> getNetworkIOStat();	
 		static std::vector<NetworkInterfaceStatus> getNetworkInterfaceStatus();
+	private:
+		static int _getNicSpeed(int ifm_active);
 	};
 }
 

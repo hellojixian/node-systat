@@ -38,4 +38,16 @@ namespace shadowgrid {
         return result;
     };
 
+    std::vector<NetworkIOStat> System::getNetworkIOStat(){
+        std::vector<NetworkIOStat> result;
+        
+        return result;
+    };   
+
+    std::vector<NetworkInterfaceStatus> System::getNetworkInterfaceStatus(){
+        std::vector<NetworkInterfaceStatus> result;
+
+        return result;
+    };
+
 } // shadowgrid
