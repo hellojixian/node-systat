@@ -38,10 +38,6 @@ namespace shadowgrid
 		unsigned int multicastPacketsSent;
 	};
 
-	struct NetworkIOStat {
-
-	};
-
 	struct DiskIOStat {
 		char name[128];
 		unsigned int readOperations;
@@ -66,6 +62,23 @@ namespace shadowgrid
 		unsigned int percent;
 	};
 
+	struct NetworkIOStat {
+		unsigned int bytesReceived;
+		unsigned int bytesSent;
+		unsigned int packetsReceived;
+		unsigned int packetsSent;
+		unsigned int errorIn;
+		unsigned int errorOut;
+		unsigned int dropIn;
+		unsigned int dropOut;
+	};
+
+	struct NetworkInterfaceStatus{
+		bool isUp;
+		unsigned int speed;
+		unsigned int mtu;
+	};
+
 	class System
 	{
 	public:
@@ -77,7 +90,7 @@ namespace shadowgrid
 		static DiskUsageInfo getDiskUsage(const char *name);
 
 		static std::vector<NetworkIOStat> getNetworkIOStat();	
-
+		static std::vector<NetworkInterfaceStatus> getNetworkInterfaceStatus();
 	};
 }
 

@@ -237,7 +237,8 @@ namespace shadowgrid {
         int ret;
         struct statvfs stat;
         ret = statvfs(name,&stat);
-    
+        if(ret!=0) return result;
+        
         result.free  = stat.f_bavail * stat.f_frsize;
         result.total = stat.f_blocks * stat.f_frsize;
         result.used  = (stat.f_blocks - stat.f_bfree) * stat.f_frsize;
