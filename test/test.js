@@ -56,8 +56,27 @@ describe('systat', function () {
             });        
         });
 
+        describe('getMainboardInfo()', function () {
+            it('should return the mainboard hardware information', function (done) {
+                var result = systat.getMainboardInfo();
+                expect(result).to.be.an.object;
+                // console.log(result);
+                done();
+            });
+        });
+
     });
 
+    describe('Memory Features', function () {
+        describe('getMemoryInfo()', function () {
+            it('should return the memory hardware information', function (done) {
+                var result = systat.getMemoryInfo();
+                expect(result).to.be.an.array;
+                // console.log(result);
+                done();
+            });
+        });
+    });
 
     describe('Disk Features', function () {        
     
@@ -93,8 +112,7 @@ describe('systat', function () {
                 expect(result).to.be.an.object;
                 expect(result.space.total).to.equal(0);
                 expect(result.space.used).to.equal(0);
-                expect(result.space.free).to.equal(0);
-                
+                expect(result.space.free).to.equal(0);                
                 expect(result.inode.total).to.equal(0);
                 expect(result.inode.used).to.equal(0);
                 expect(result.inode.free).to.equal(0);
@@ -107,7 +125,6 @@ describe('systat', function () {
                 expect(result.space.total).to.equal(0);
                 expect(result.space.used).to.equal(0);
                 expect(result.space.free).to.equal(0);
-
                 expect(result.inode.total).to.equal(0);
                 expect(result.inode.used).to.equal(0);
                 expect(result.inode.free).to.equal(0);
