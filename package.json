@@ -10,7 +10,7 @@
     "io",
     "net"
   ],
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Jixian Wang <hellojixian@gmail.com>",
   "repository": {
     "type": "git",
@@ -20,10 +20,10 @@
     "url": "https://github.com/hellojixian/node-systat/issues"
   },
   "config": {
-    "unsafe-perm":true
+    "unsafe-perm": true
   },
-  "scripts": {   
-    "test":"mocha ./test/*.js"
+  "scripts": {
+    "test": "mocha ./test/*.js"
   },
   "dependencies": {},
   "devDependencies": {
