@@ -24,13 +24,13 @@ namespace shadowgrid
 		unsigned long packetsReceived;
 		unsigned long packetsSent;
 		unsigned long framesReceived;
-		unsigned long framesSent;		
-		shadowgrid::FrameStatInfo framesReceivedDetail;
-		shadowgrid::FrameStatInfo framesSentDetail;
+		unsigned long framesSent;				
 		unsigned long boardcastPacketsReceived;
 		unsigned long boardcastPacketsSent;
 		unsigned long multicastPacketsReceived;
 		unsigned long multicastPacketsSent;
+		struct FrameStatInfo framesReceivedDetail;
+		struct FrameStatInfo framesSentDetail;
 	};
 
 	struct DiskIOStat {
@@ -50,11 +50,16 @@ namespace shadowgrid
 		char fileSystem[128];
 	};
 
-	struct DiskUsageInfo {
+	struct UsageInfo {
 		unsigned long total;
 		unsigned long used;
 		unsigned long free;
 		unsigned int percent;
+	};
+
+	struct DiskUsageInfo {
+		struct UsageInfo space;
+		struct UsageInfo inode;
 	};
 
 	struct NetworkIOStat {

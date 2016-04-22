@@ -240,19 +240,40 @@ namespace shadowgrid {
 		//call system				
 		DiskUsageInfo disk = System::getDiskUsage(*mountPoint);
 
+		Local<Object> space = Object::New(isolate);
 		
-	    result->Set(String::NewFromUtf8(isolate,"total"),
-	    			Number::New(isolate,disk.total));
+	    space->Set(String::NewFromUtf8(isolate,"total"),
+	    			Number::New(isolate,disk.space.total));
 
-	    result->Set(String::NewFromUtf8(isolate,"used"),
-	    			Number::New(isolate,disk.used));
+	    space->Set(String::NewFromUtf8(isolate,"used"),
+	    			Number::New(isolate,disk.space.used));
 
-	    result->Set(String::NewFromUtf8(isolate,"free"),
-	    			Number::New(isolate,disk.free));
+	    space->Set(String::NewFromUtf8(isolate,"free"),
+	    			Number::New(isolate,disk.space.free));
 
-	    result->Set(String::NewFromUtf8(isolate,"percent"),
-	    			Number::New(isolate,disk.percent));
+	    space->Set(String::NewFromUtf8(isolate,"percent"),
+	    			Number::New(isolate,disk.space.percent));
 
+		result->Set(String::NewFromUtf8(isolate,"space"),space);
+
+
+
+		Local<Object> inode = Object::New(isolate);
+		
+	    inode->Set(String::NewFromUtf8(isolate,"total"),
+	    			Number::New(isolate,disk.inode.total));
+
+	    inode->Set(String::NewFromUtf8(isolate,"used"),
+	    			Number::New(isolate,disk.inode.used));
+
+	    inode->Set(String::NewFromUtf8(isolate,"free"),
+	    			Number::New(isolate,disk.inode.free));
+
+	    inode->Set(String::NewFromUtf8(isolate,"percent"),
+	    			Number::New(isolate,disk.inode.percent));
+
+		result->Set(String::NewFromUtf8(isolate,"inode"),inode);
+		
 		
 		args.GetReturnValue().Set(result);
 	}

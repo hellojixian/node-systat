@@ -9,10 +9,29 @@ var os = require("os");
 describe('systat', function () {
     
 
+    describe('CPU Features', function () {
+        describe('getCPUTTemperatures()', function () {
+            it('should return the CPU temperature(C) as array', function (done) {
+                var result = systat.getCPUTemperatures();
+                expect(result).to.be.an.array;            
+                done();
+            });        
+        });
+
+        describe('getCPUInfo()', function () {
+            it('should', function (done) {
+                var result = systat.getCPUInfo();
+                expect(result).to.be.an.object;
+                // console.log(result);
+                done();                
+            });            
+        });        
+    });
+
     describe('Mainboard Features', function () {
 
         describe('getFanSpeeds()', function () {
-            it('shoudl return the system fans speed(rpm) as array', function (done) {
+            it('should return the system fans speed(rpm) as array', function (done) {
                 var result = systat.getFanSpeeds();            
                 expect(result).to.be.an.array;
                 done();
@@ -20,23 +39,17 @@ describe('systat', function () {
         });
 
         describe('getSystemTemperatures()', function () {
-            it('shoudl return the system temperature(C) as array', function (done) {
+            it('should return the system temperature(C) as array', function (done) {
                 var result = systat.getSystemTemperatures();
                 expect(result).to.be.an.array;        
                 done();
             });        
         });
 
-        describe('getCPUTTemperatures()', function () {
-            it('shoudl return the CPU temperature(C) as array', function (done) {
-                var result = systat.getCPUTemperatures();
-                expect(result).to.be.an.array;            
-                done();
-            });        
-        });
+
 
         describe('getVoltages()', function () {
-            it('shoudl return the system voltages(mV) as array', function (done) {
+            it('should return the system voltages(mV) as array', function (done) {
                 var result = systat.getVoltages();
                 expect(result).to.be.an.array;
                 done();
@@ -78,25 +91,33 @@ describe('systat', function () {
             it('should return object with all zero filled if pass a non exists path', function (done) {
                var result = systat.getDiskUsage("nonexist0");
                 expect(result).to.be.an.object;
-                expect(result.total).to.equal(0);
-                expect(result.used).to.equal(0);
-                expect(result.free).to.equal(0);
+                expect(result.space.total).to.equal(0);
+                expect(result.space.used).to.equal(0);
+                expect(result.space.free).to.equal(0);
+                
+                expect(result.inode.total).to.equal(0);
+                expect(result.inode.used).to.equal(0);
+                expect(result.inode.free).to.equal(0);
                 done(); 
             });
 
             it('should return object with all zero filled if pass a bad path', function (done) {
                var result = systat.getDiskUsage(";ls -l;");
                 expect(result).to.be.an.object;
-                expect(result.total).to.equal(0);
-                expect(result.used).to.equal(0);
-                expect(result.free).to.equal(0);
+                expect(result.space.total).to.equal(0);
+                expect(result.space.used).to.equal(0);
+                expect(result.space.free).to.equal(0);
+
+                expect(result.inode.total).to.equal(0);
+                expect(result.inode.used).to.equal(0);
+                expect(result.inode.free).to.equal(0);
                 done(); 
             });            
         });
 
 
         describe('getDiskIOStat()', function () {
-            it('shoudl return the disk I/O statistics info as object', function (done) {
+            it('should return the disk I/O statistics info as object', function (done) {
                 var result = systat.getDiskIOStat();              
                 expect(result).to.be.an.object;
                 // console.log(result);
@@ -155,6 +176,15 @@ describe('systat', function () {
 
         });
 
+        describe('getDisksInfo()', function () {
+            it('should return all disks SMART info as object', function (done) {
+                var result = systat.getDisksInfo();              
+                expect(result).to.be.an.object;            
+                // console.log(result);
+                done();
+            });
+        });
+
         describe('getDiskInfo(device)', function () {
             it('should return disk SMART info as object', function (done) {            
                 var result = systat.getDiskInfo(systat.getDisks()[0]);              
@@ -199,6 +229,23 @@ describe('systat', function () {
                 done();
             });
         });
+
+        describe('getNetworkInterfacesInfo()', function () {
+            it('should return all network interfaces hardware vendor and model info', function (done) {
+                var result = systat.getNetworkInterfacesInfo();
+                // console.log(result);
+                done();
+            });
+        });
+
+        describe('getNetworkInterfaceInfo(name)', function () {
+            it('should return specified network interface hardware vendor and model info', function (done) {
+                var name = Object.keys(systat.getNetworkInterfaceStatus())[0];
+                var result = systat.getNetworkInterfaceInfo(name);
+                // console.log(result);
+                done();
+            });
+        });
     });
 
     describe('Misc Features', function () {
@@ -220,4 +267,6 @@ describe('systat', function () {
             });    
         });
     });
+
+
 });

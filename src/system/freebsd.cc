@@ -249,11 +249,15 @@ namespace shadowgrid {
         ret = statvfs(name,&stat);
         if(ret!=0) return result;
 
-        result.free  = stat.f_bavail * stat.f_frsize;
-        result.total = stat.f_blocks * stat.f_frsize;
-        result.used  = (stat.f_blocks - stat.f_bfree) * stat.f_frsize;
-        result.percent = (((double)result.used/(double)result.total)*10000)/100;
+        result.space.free  = stat.f_bavail * stat.f_frsize;
+        result.space.total = stat.f_blocks * stat.f_frsize;
+        result.space.used  = (stat.f_blocks - stat.f_bfree) * stat.f_frsize;
+        result.space.percent = (((double)result.space.used/(double)result.space.total)*10000)/100;
 
+        result.inode.free = stat.f_favail;
+        result.inode.total = stat.f_files;
+        result.inode.used = stat.f_files - stat.f_favail;
+        result.inode.percent = (((double)result.inode.used/(double)result.inode.total)*10000)/100;
         return result;
     };
 
