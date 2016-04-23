@@ -146,7 +146,7 @@ describe('systat', function () {
             it('should return the disk temperature(c) as int', function (done) {            
                 var result = systat.getDiskTemperature(systat.getDisks()[0]);              
                 expect(result).to.be.an.int;
-                // console.log(result);
+                expect(result).to.be.above(0);            
                 done();
             });
 
