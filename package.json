@@ -28,7 +28,7 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "*"
+    "mocha": "^2.5.3"
   },
   "license": "BSD-3-Clause",
   "engines": [
