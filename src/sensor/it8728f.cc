@@ -135,11 +135,11 @@ static int it87_read_value(u_int addr, u_int reg)
 	
 }
 
-static void it87_write_value(u_int addr, u_int reg, u_int value)
-{
-	outb( addr + IT87_ADDR_REG_OFFSET ,reg);	
-	outb( addr + IT87_DATA_REG_OFFSET , value);
-}
+// static void it87_write_value(u_int addr, u_int reg, u_int value)
+// {
+// 	outb( addr + IT87_ADDR_REG_OFFSET ,reg);	
+// 	outb( addr + IT87_DATA_REG_OFFSET , value);
+// }
 
 void test()
 {
@@ -176,12 +176,12 @@ void test()
 
 }
 
-int main(int argc, char **argv)
-{
-	if(!shadowgrid::Sensor::checkChip()) return -1;	
-	// test();	
-	return 0;
-}
+// int main(int argc, char **argv)
+// {
+// 	if(!shadowgrid::Sensor::checkChip()) return -1;	
+// 	// test();	
+// 	return 0;
+// }
 
 #endif
 

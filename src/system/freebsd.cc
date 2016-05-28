@@ -44,7 +44,7 @@ namespace shadowgrid {
     std::vector<int> System::getCPUTemperatures()
     {
         std::vector<int> result;
-        int mib[2], ret, ncpu,temperature;
+        int ret, ncpu,temperature;
         size_t len =4;              
                 
         //get cpu number                
