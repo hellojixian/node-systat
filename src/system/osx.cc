@@ -1,5 +1,5 @@
 #include "system.h"
-
+#ifdef __APPLE__
 namespace shadowgrid {
 
     std::vector<int> System::getCPUTemperatures()
@@ -51,3 +51,4 @@ namespace shadowgrid {
     };
 
 } // shadowgrid
+#endif
