@@ -10,7 +10,7 @@
     "io",
     "net"
   ],
-  "version": "0.2.11",
+  "version": "0.2.12",
   "author": "Jixian Wang <hellojixian@gmail.com>",
   "repository": {
     "type": "git",
